@@ -1,0 +1,68 @@
+package com.cinema.web.member.service;
+
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.cinema.web.member.bean.MemberBean;
+import com.cinema.web.member.dao.MemberDao;
+
+@Service
+public class MemberServiceImpl implements MemberService {
+	
+	@Autowired
+	private MemberDao memberDao;
+	
+	
+	@Override
+	// joinMember : 회원가입
+	public int insertMember(MemberBean bean) throws Exception {
+		
+		//중복된 회원가입을 방지하기 위해서 회원을 조회한다.
+		MemberBean mBean = memberDao.selectMember(bean);
+		
+		if(mBean == null) {
+			
+			int intVal = memberDao.insertMember(bean);
+			return intVal;
+			
+		}
+		
+		throw new Exception("회원가입에러");
+	}
+	
+
+	
+	// 로그인
+	public boolean selectLoginMember(MemberBean bean) {
+		
+		int resVal = memberDao.selectLoginMember(bean);
+		
+		if(resVal == 1) {
+			return true;
+		}
+		
+		return false;
+	}
+	
+	public MemberBean selectMember(MemberBean bean) {
+		return memberDao.selectMember(bean);
+	}
+	
+	public List<MemberBean>  selectMemberList(MemberBean bean){
+			return memberDao.selectMemberList(bean);
+		}
+	
+	// updateMember : 회원정보수정
+	public int updateMember(MemberBean bean) {
+		return memberDao.updateMember(bean);
+	}
+
+		
+	// deleteMember : 회원탈퇴
+	public int deleteMember(MemberBean bean){
+		return memberDao.deleteMember(bean);
+	}
+
+}

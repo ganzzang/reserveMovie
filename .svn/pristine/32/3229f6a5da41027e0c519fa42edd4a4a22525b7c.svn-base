@@ -1,0 +1,112 @@
+package com.cinema.web.movie.controller;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import com.cinema.web.common.bean.PagingBean;
+import com.cinema.web.common.constant.CommonConst;
+import com.cinema.web.member.bean.MemberBean;
+import com.cinema.web.movie.bean.MovieBean;
+import com.cinema.web.movie.bean.SeatBean;
+import com.cinema.web.movie.service.MovieService;
+@Controller
+public class MovieController {
+
+		@Autowired MovieService movieService;
+	// insertMovie : 영화등록
+		@RequestMapping("/admin/insertMovieProc")
+		@ResponseBody
+		public Map<String, Object> insertMovieProc(MovieBean movieBean){
+			Map<String, Object> map = new HashMap<String, Object>();
+			String result = CommonConst.RESULT_FAIL;
+			String resultMsg = "영화 등록에 실패 하였습니다.";
+			try{
+				int rtnVal = movieService.insertMovie(movieBean);
+				//성공
+				if(rtnVal>0){
+					result = CommonConst.RESULT_OK;
+					resultMsg = "영화를 등록하였습니다.";
+				}
+			}catch(Exception e){
+				e.printStackTrace();
+			}
+			map.put(CommonConst.RESULT, result);
+			map.put(CommonConst.RESULT_MSG, resultMsg);
+			return map;
+		}
+	
+	// updateMovie : 영화수정
+	
+	// deleteMovie : 영화삭제
+	
+	// selectMovieList : 영화리스트
+	@RequestMapping("/movie/selectMovieList")
+	@ResponseBody
+	public Map<String, Object> selectMovieList(MovieBean mBean, PagingBean pagingBean, Model model){
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		String result = CommonConst.RESULT_FAIL;
+		String resultMsg = "영화 리스트 조회를 실패 하였습니다.";
+		
+		try {
+			//전체 리스트 갯수
+			int totCount = movieService.selectListTotCount(pagingBean);
+			
+			pagingBean.calcPage(totCount);
+			
+			//리스트 데이터
+			List<MovieBean> list = movieService.selectMovieList(pagingBean);
+			
+			for(int i = 0; i < list.size(); ++i){
+				int totSeatCount = movieService.selectTotalSeatCount(list.get(i));
+				int revSeatCount = movieService.selectRevSeatCount(list.get(i));
+				
+				list.get(i).setTotSeat(totSeatCount);
+				list.get(i).setRevSeat(revSeatCount);
+			}
+			
+			result = CommonConst.RESULT_OK;
+			resultMsg = "회원 리스트 조회에 성공 하였습니다.";
+			
+			map.put("pagingBean", pagingBean);
+			map.put("movieList", list);
+
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
+		
+		map.put(CommonConst.RESULT, result);
+		map.put(CommonConst.RESULT_MSG, resultMsg);
+		
+		return map;
+	}
+	
+	@RequestMapping("/movie/selectMovie")
+	public String selectMovie(MovieBean movieBean, PagingBean pagingBean, Model model){
+		System.out.println(movieBean.getCode());
+		
+		MovieBean mBean = movieService.selectMovie(movieBean);
+		
+		if(mBean != null) {
+			System.out.println( movieBean.getCode());
+		} 
+
+		//실어 나른다.
+		model.addAttribute("movieBean", mBean);
+		
+		return "/member/reserveMovie";
+	}
+	
+	// addHall : 영화관추가 
+	
+	// deleteHall : 영화관 삭제
+	
+}

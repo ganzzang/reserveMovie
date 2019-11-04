@@ -1,0 +1,70 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<script type="text/javascript" src="/js/member/memberApp.js"></script>
+<script type="text/javascript" src="/js/member/memberController.js"></script>
+</head>
+<script type="text/javascript">
+
+$(document).ready(function(){
+	
+		var url = "/member/reserveMovieAjax.do"
+		var params={};
+		params.hall='A';
+		params.titleEng='FATE';
+		params.opTime='2017-12-12_12';
+		
+		$.ajax({
+			type:"GET"
+			,url:url
+			,data:params
+			,success:function(data){
+				 console.log(data);
+		           
+				if(data.result=='ok'){
+					console.log(data);
+				}
+			},error:function(e){
+				console.log(e);
+			}
+			
+		});//Ajax끝
+
+	
+})
+
+
+
+
+document.write( "<table align='center' border='1' cellspacing='0' cellpadding='0'>" );
+	var str = " ";
+	for ( var i=0; i<8; i++ )
+	{
+		document.write( "<tr>" );
+		var arr = ["A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z"];
+		
+			for ( var j=1; j<=5; j++ )
+			{
+				str = arr[i] + j;
+				document.write( "<td><span onClick='alert(str)' style='cursor:pointer'>" + str + "</span></td>" );
+			};
+		document.write( "</tr>" );	
+	};
+	
+document.write( "</table>" );
+
+</script>
+
+<body>
+	
+	<br>
+	<div align="center">
+	<input type="button" value="예약" onCLick="alert('예약')">
+	<input type="button" value="취소" onClick="alert('취소')">
+	</div>
+
+</body>
+</html>

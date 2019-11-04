@@ -1,0 +1,45 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+	<table border="1">
+		<tr>
+			<th>이미지</th>
+			<th>제목</th>
+			<th>상영관</th>
+			<th>잔여좌석</th>
+			<th>상영시간</th>
+		</tr>
+		<tr align="center">
+			<td><input type="checkbox">Image_a</td>
+			<td>Title_a</td>
+			<td>Hall_a</td>
+			<td>0/100</td>
+			<td>2017-12-12</td>
+		</tr>
+		<tr align="center">
+			<td><input type="checkbox">Image_b</td>
+			<td>Title_b</td>
+			<td>Hall_b</td>
+			<td>0/70</td>
+			<td>2017-12-12</td>
+		</tr>
+		<tr align="center">
+			<td><input type="checkbox">Image_c</td>
+			<td>Title_c</td>
+			<td>Hall_c</td>
+			<td>0/50</td>
+			<td>2017-12-12</td>
+		</tr>
+		
+	</table>
+	<input type=button value="추가">
+	<input type=button value="삭제">
+</body>
+</html>

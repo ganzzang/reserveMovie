@@ -1,0 +1,175 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Insert title here</title>
+
+<script type="text/javascript">
+		var pagingBean;
+		
+		//리스트 출력
+		function showList(pageNo) {
+			
+			var url = "/member/selectMovie.do";
+			var params = {};
+			
+			params.pageNo = pageNo;
+			if(pageNo == null || pageNo == '') {
+				params.pageNo = 1;
+			}
+			
+			$.ajax({      
+		        type: "POST",  
+		        url: url,      
+		        data: params,
+		        success: function(data){   
+		           console.log(data);
+		           		           
+		           if(data.result == 'ok') {
+					
+		        	   $("#movieInfoList").empty();
+		        	   $("#pageList").empty();
+		        	   
+		        	   pagingBean = data.pagingBean;
+		        	   
+		        	   for(var i=0; i<data.movieList.length; i++) {
+		        		   
+		        		   var bean = data.movieList[i];
+		        		   
+		        		   var str = 
+		        			   '<tr>' + '<td align="center">'
+					   			+ '<td align="center">' + '<img src=' + bean.path + ' width=200px height=300px>' + '</td>'
+					   			+ '<td align="center">' + bean.titleKor + '</td>'
+					   			+ '<td align="center">' + bean.hall + '</td>'
+					   			+ '<td align="center">' + (bean.totSeat-bean.revSeat) + '</td>'
+					   			+ '<td align="center">' + bean.opTime + '</td>'
+			   				+ '</tr>';
+			   				
+			   				$("#movieInfoList").append( str );
+			   				
+		        	   }//end for
+		        	   
+		        	   
+		        	   //페이징 출력
+		        	   var pBean = data.pagingBean;
+		        	   var str = "";
+		        	   
+		        	   //그룹번호 달아주기
+	        		   if(pBean.groupNo > 1 ) {
+	        			   str += " [<span onclick='showList(" 
+	        				   + (pBean.pageStartNo-1) + ")' style='cursor:pointer'>이전</span>] ";   
+	        		   }
+		        	   
+		        	   for(var i=pBean.pageStartNo; i<=pBean.pageEndNo; i++) {
+		        		   if(i == pBean.pageNo) {
+		        			   str += "[<span>" + i + "</span>] &nbsp;";   
+		        		   } else {
+		        			   str += '[<span onclick="showList(' 
+		        				   	+ i + ')" style="cursor:pointer; color:blue;">' + i + '</span>] &nbsp;';   
+		        		   }
+		        	   }
+		        	   
+		        	   //그룹번호 달아주기
+	        		   if(pBean.groupNo < pBean.totalGroupCount ) {
+	        			   str += " [<span onclick='showList(" 
+	        				   + (pBean.pageEndNo+1) + ")' style='cursor:pointer'>다음</span>] ";   
+	        		   }
+	        		   
+		        	   
+		        	   $("#pageList").append(str);
+
+		           }//end if
+		        
+		        },   
+		        error:function(e){  
+		        	console.log(e);  
+		        }  
+		   	});
+			
+		}
+		
+		
+		$(function() {
+			
+			showList('${param.pageNo}');
+			
+		});
+		
+		function addMovie(){
+			
+		}
+		
+		function deleteMovie(){
+			
+		}
+		
+		function moveTo(){
+			location.replace("/member/joinMember.do");
+		}
+		
+		function moveTo(i){
+			// admin 아이디로 회원가입시 전체목록 출력	
+			if(i == 'a'){
+				location.replace("/member/selectMemberList.do");
+			}
+			// 본인정보만 출력
+			else if(i == 'b'){
+				location.replace("/member/selectMember.do?memberId=${sessionScope.loginBean.memberId}");
+			}
+			// 로그아웃
+			else{
+				location.replace("/member/logout.do");
+			}
+		}
+		
+		function moveTo(){
+			location.replace("/member/joinMember.do");
+		}
+		
+	</script>
+
+</head>
+<body>
+<body>
+	
+	<table border="1" align="center" cellspacing="0" cellpadding="0" width="800px">
+		<tr>
+			<th>
+			<c:if test="${sessionScope.loginBean.memberId != null}">
+				${sessionScope.loginBean.name}님 환영합니다.!!!
+			</c:if>
+
+			<c:if test="${sessionScope.loginBean.memberId == 'admin'}">
+				<input type="button" value="회원목록" onclick="moveTo('a')">
+			</c:if>
+			<input type="button" value="예약정보" onclick="moveTo('b')">
+			<input type="button" value="로그아웃" onclick="moveTo('c')">
+			</th>
+		</tr>
+	</table>
+	<table border="1" align="center" cellspacing="0" cellpadding="0" width="800px">
+		<tr>
+			<th rowspan=3>
+				<form action="/member/loginProc.do" method="POST">
+					ID : <input type="text" name="memberId">
+					PW : <input type="password" name="password">
+					<input type="submit" value="로그인">
+				</form>
+				<input type="button" value="회원가입" onclick="moveTo()">
+			</th>
+			<th>이미지</th>
+			<th>제목</th>
+			<th>상영관</th>
+			<th>잔여좌석</th>
+			<th>상영시간</th>
+		</tr>
+		<tbody id="movieInfoList"></tbody>
+	</table>
+
+	<a href='/member/loginBf.do'>로그인</a>
+	
+	<input type="button" value="회원가입" onclick="moveTo()">
+</html>

@@ -1,0 +1,52 @@
+package com.cinema.web.movie.bean;
+
+// 예약정보 관리하는 Bean
+public class ReserveBean {
+	
+	private String no;
+	private String id;
+	private String code;
+	private String seatShow;
+	private String seatHidden;
+	private String hall;
+	
+	
+	public String getNo() {
+		return no;
+	}
+	public void setNo(String no) {
+		this.no = no;
+	}
+	public String getId() {
+		return id;
+	}
+	public void setId(String id) {
+		this.id = id;
+	}
+	public String getCode() {
+		return code;
+	}
+	public void setCode(String code) {
+		this.code = code;
+	}
+	public String getSeatShow() {
+		return seatShow;
+	}
+	public void setSeatShow(String seatShow) {
+		this.seatShow = seatShow;
+	}
+	public String getSeatHidden() {
+		return seatHidden;
+	}
+	public void setSeatHidden(String seatHidden) {
+		this.seatHidden = seatHidden;
+	}
+	public String getHall() {
+		return hall;
+	}
+	public void setHall(String hall) {
+		this.hall = hall;
+	}
+
+	
+}

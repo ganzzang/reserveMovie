@@ -1,0 +1,15 @@
+package com.cinema.web.member.service;
+
+public interface MemberService {
+	
+	// joinMember : 회원가입
+	
+	// updateMember : 회원정보수정
+		
+	// deleteMember : 회원탈퇴
+		
+	// selectMember : 멤버리스트/검색
+		
+		
+	
+}

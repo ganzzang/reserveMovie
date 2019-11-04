@@ -1,0 +1,94 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+	pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Insert title here</title>
+
+	<script type="text/javascript">
+		function updateSeatNum(seatHidden,id,code){
+			if( confirm("예약내역은 모두 삭제 후 수정이 가능합니다. 수정하시겠습니까?") ){
+				
+				var url = "/member/deleteSeatAjax.do";
+				// .do 가 있는경우 controller로 간다
+				var params = {};
+				params.seatHidden = seatHidden;
+				params.id = id;
+				params.code = code;
+				
+				$.ajax({      
+			        type: "GET",  
+			        url: url,      
+			        data: params,
+			        success: function(data){   
+			           console.log(data);
+						if(data.result == 'ok') {
+							location.replace("/movie/selectMovie.do?code=" + code);	
+						}
+						else{
+							alert("예약 정보 수정에 실패하였습니다. 관리자에게 문의해 주세요.");
+						}
+			        },   
+			        error:function(e){  
+			        	console.log(e); 
+						alert("관리자에게 문의해 주세요.");
+			        	location.replace("/member/selectMember.do?memberId="+id);
+			        }  
+			   	});
+			}
+		}
+	</script>
+</head>
+<body>
+
+		<table border="1" cellspacing="0" cellpadding="0" width="800px">
+		
+		<tr align="center">
+			<th>ID</th>
+			<th>이름</th>
+			<th>이메일</th>
+			<th>전화번호</th>
+		</tr>
+
+			<tr align="center">
+				<td width="15%">${memberBean.memberId}</td>
+				<td width="20%">${memberBean.name}</td>
+				<td width="20%">${memberBean.email}</td>
+				<td width="20%">${memberBean.tel}</td>
+			</tr>
+		
+			<a href="/member/updateMember.do?memberId=${memberBean.memberId}">수정</a>
+			<a href="/member/delete.do?memberId=${memberBean.memberId}">삭제</a>
+	</table>
+	
+	<div class="reserve">
+	예약정보<br>
+	<table border="1" cellspacing="0" cellpadding="0" width="800px">
+		
+		<tr align="center">
+			<th>영화제목</th>
+			<th>시작시간</th>
+			<th>상영관</th>
+			<th>좌석</th>
+			<th colspan="2">작동</th>
+		</tr>
+		
+		<!--  예약정보 -->
+		<c:forEach var="reserve" items="${reserveList}" varStatus="status">
+			<tr align="center">
+				<td width="30%">${reserve.titleKor}</td>
+				<td width="20%">${reserve.opTime}</td>
+				<td width="15%">${reserve.hall}</td>
+				<td width="15%">${reserve.seatShow}</td>
+				<td width="10%" style='cursor:pointer' onClick="updateSeatNum('${reserve.seatHidden}','${memberBean.memberId}','${reserve.code}')">수정</td>
+				<td width="10%"><a href="/member/deleteSeat.do?seatHidden=${reserve.seatHidden}&id=${reserve.id}">삭제</a></td>
+			</tr>
+		</c:forEach>
+	</table>
+
+	</div>
+	<a href="/index.do">첫화면으로</a>
+</body>
+</html>

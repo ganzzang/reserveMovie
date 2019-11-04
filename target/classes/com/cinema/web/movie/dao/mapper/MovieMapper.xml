@@ -1,0 +1,236 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.cinema.web.movie.dao.MovieDao">
+
+
+
+<!-- 현재 예매된 좌석의 수 -->
+<select id="selectRevSeatCount" parameterType="seatBean" resultType="int">
+	SELECT 
+		COUNT(SEAT_NO)
+	FROM 
+		HR.MV_SEAT
+	WHERE
+		CODE=#{code} AND SEAT_VALUE='Y'
+</select>
+
+
+<select id="selectTotalSeatCount" parameterType="seatBean" resultType="int">
+	SELECT 
+		COUNT(SEAT_NO)
+	FROM 
+		HR.MV_SEAT
+	WHERE
+		CODE=#{code}
+</select>
+
+
+<select id="selectListTotCount" resultType="int" parameterType="pagingBean">
+		SELECT 
+			COUNT(*)
+		FROM 
+			HR.MV_MOVIE
+</select>
+
+<insert id="insertMovie" parameterType="movieBean">
+		INSERT INTO HR.MV_MOVIE
+		(
+			TITLE_KOR,
+			TITLE_ENG,
+			HALL,
+			OP_TIME,
+			ED_TIME,
+			PATH,
+			CODE
+		)
+		VALUES
+		(
+			#{titleKor},
+			#{titleEng},
+			#{hall},
+			TO_DATE(#{opTime},'MM-DD HH24:MI'),
+			TO_DATE(#{edTime},'MM-DD HH24:MI'),
+			#{path},
+			#{code}
+		)
+</insert>
+
+<insert id="insertHallSeat" parameterType="seatBean">
+		INSERT INTO HR.MV_SEAT
+		(
+			SEAT_NO,
+			SEAT_VALUE,
+			CODE
+		)
+		VALUES
+		(
+			#{seatNo},
+			'N',
+			#{code}
+		)
+</insert>
+
+<!-- Y가 예매상태 -->
+<!-- 시트 추가 -->
+<!-- version 68
+<insert id="insertSeat" parameterType="seatBean">
+	INSERT INTO HR.MV_SEAT 
+	(
+		SEAT_NO
+		, SEAT_VALUE
+		, CODE
+	)
+	VALUES
+	(
+		#{seatNo}
+		, #{seatValue}
+		, #{code}
+	)
+</insert>
+-->
+	
+<select id="selectMovieList" parameterType="pagingBean" resultType="movieBean">
+	SELECT
+            *
+        FROM (
+            SELECT
+                TITLE_KOR AS titleKor
+                ,TITLE_ENG AS titleEng
+                ,HALL
+                ,DATE_FORMAT(OP_TIME, %Y-%m-%d %H) AS opTime
+                ,DATE_FORMAT(OP_TIME, %Y) AS opTimeYear
+                ,DATE_FORMAT(OP_TIME, %m) AS opTimeMonth
+                ,DATE_FORMAT(OP_TIME, %d) AS opTimeDay
+                ,DATE_FORMAT(OP_TIME, %H) AS opTimeHh
+                ,DATE_FORMAT(OP_TIME, %i) AS opTimeMi
+                ,DATE_FORMAT(ED_TIME, %Y-%m-%d %H) AS edTime
+                ,DATE_FORMAT(ED_TIME, %Y) AS edTimeYear
+                ,DATE_FORMAT(ED_TIME, %m) AS edTimeMonth
+                ,DATE_FORMAT(ED_TIME, %d) AS edTimeDay
+                ,DATE_FORMAT(ED_TIME, %H) AS edTimeHh
+                ,DATE_FORMAT(ED_TIME, %i) AS edTimeMi
+                ,PATH
+                ,CODE
+                ,ROW_NUMBER() OVER(ORDER BY TITLE_ENG DESC) AS betweenNum
+                ,ROW_NUMBER() OVER(ORDER BY TITLE_ENG ASC) AS NUM
+                ,(SELECT COUNT(*) FROM HR.MV_SEAT)
+            FROM
+                HR.MV_MOVIE
+            )
+</select>
+
+<!-- seat 화면 관련 쿼리 -->
+<!-- 현재 예매된 좌석들 list출력 -->
+<select id="selectSeat" parameterType="seatBean" resultType="seatBean">	
+	SELECT 
+		SEAT_NO AS seatNo
+		,SEAT_VALUE AS seatValue
+		,CODE
+	FROM 
+		HR.MV_SEAT
+	WHERE
+		CODE=#{code}
+	ORDER BY SEAT_NO
+</select>
+
+<select id="selectMovie" parameterType="movieBean" resultType="movieBean">
+	SELECT
+            *
+        FROM (
+            SELECT
+                TITLE_KOR AS titlekor
+                ,TITLE_ENG AS titleeng
+                ,HALL
+                ,DATE_FORMAT(OP_TIME, 'YYYY_MM_DD_HH24') AS opTime
+                ,DATE_FORMAT(ED_TIME, 'YYYY_MM_DD_HH24') AS edTime
+                ,PATH
+                ,CODE
+                ,ROW_NUMBER() OVER(ORDER BY TITLE_ENG DESC) AS betweenNum
+                ,ROW_NUMBER() OVER(ORDER BY TITLE_ENG ASC) AS NUM
+                ,(SELECT COUNT(*) FROM HR.MV_SEAT)
+            FROM
+                HR.MV_MOVIE
+            WHERE
+            	HR.MV_MOVIE.CODE = #{code}
+            )
+</select>
+
+
+<update id="updateMovie" parameterType="movieBean">
+		UPDATE HR.MV_MOVIE
+		SET 
+			TITLE_KOR = #{titleKor}
+			,TITLE_ENG = #{titleEng}
+			,HALL = #{hall}
+			,OP_TIME = TO_DATE(#{opTime},'MM-DD HH24:MI')
+			,ED_TIME = TO_DATE(#{edTime},'MM-DD HH24:MI')
+			,PATH = #{path}
+		WHERE
+			CODE = #{code}
+</update>
+
+
+<!-- 좌석 예약여부 확인 -->
+<select id="selectSeatValue" parameterType="seatBean" resultType="seatBean">	
+	SELECT 
+		SEAT_NO AS seatNo
+		,SEAT_VALUE AS seatValue
+		,CODE
+	FROM 
+		HR.MV_SEAT
+	WHERE
+		CODE=#{code,jdbcType=VARCHAR} AND SEAT_NO=#{seatNo,jdbcType=VARCHAR}
+</select>
+
+<!-- 좌석 예약시 작동하는 쿼리 -->
+<update id="reserveMovie" parameterType="seatBean">
+	UPDATE HR.MV_SEAT
+	SET 
+		SEAT_VALUE = 'Y'
+		,ID=#{id}
+	WHERE
+		SEAT_NO = #{revRequestSeat} AND CODE=#{code}
+</update>
+
+<delete id="deleteMovie" parameterType="movieBean">
+	DELETE
+	FROM
+		HR.MV_MOVIE
+	WHERE
+		CODE = #{code}
+</delete>
+
+<delete id="deleteHall" parameterType="seatBean">
+	DELETE
+	FROM
+		HR.MV_SEAT
+	WHERE
+		CODE = #{code}
+</delete>
+<!-- 좌석 예미시, MV_REV 테이블에 데이터 INSERT -->
+<insert id="insertRev" parameterType="reserveBean">
+	INSERT INTO HR.MV_REV
+	(
+		NO
+		, ID
+		, CODE
+		, SEAT_SHOW
+		, SEAT_HIDDEN
+		, HALL
+	)
+	VALUES
+	(
+		  (SELECT NVL(COUNT(NO),0) FROM HR.MV_REV)
+		, #{id}
+		, #{code}
+		, #{seatShow}
+		, #{seatHidden}
+		, #{hall}
+	)
+</insert>
+
+
+
+</mapper>

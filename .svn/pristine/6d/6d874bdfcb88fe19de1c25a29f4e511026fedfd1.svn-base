@@ -1,0 +1,44 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+	pageEncoding="UTF-8"%>
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+	<table>
+
+		<form action="" method="POST">
+			<tr>
+				<td>ID :</td>
+				<td><input type="text"> <input type="button"
+					value="중복확인" onClick=""></td>
+			<tr>
+				<td>PW :</td>
+				<td><input type="text"> <input type="text"
+					placeholder="PW 재입력"></td>
+			<tr>
+				<td>이름 :</td>
+				<td><input type="text"></td>
+			<tr>
+				<td>이메일 :</td>
+				<td><input type="text"> <select name="">
+						<option value="">-선택-
+						<option value="naver.com">naver.com
+						<option value="hanmail.co.kr">hanmail.co.kr
+						<option value="gmail.com">gmail.com
+						<option value="yahoo.co.kr">yahoo.co.kr
+						<option value="기타">직접입력
+				</select> <input type="button" value="중복"></td>
+			<tr>
+				<td>전화번호 :</td>
+				<td><input type="text"></td>
+			</tr>
+			<tr align="center">
+				<tdcolspan"2"> <input type = "button" value = "등록" onClick="location.href='URL입력'">&nbsp;<input type = "button" value = "취소" onClick=""></td>
+	
+		</form>
+	</table>
+</body>
+</html>

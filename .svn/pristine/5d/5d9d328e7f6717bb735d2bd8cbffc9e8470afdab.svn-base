@@ -1,0 +1,79 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ taglib prefix="decorator" uri="http://www.opensymphony.com/sitemesh/decorator" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<meta name="viewport"
+	content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no">
+
+	<title>
+		<decorator:title default="JAVA 일본 취업 3기" />
+	</title>
+	
+	<!-- 공용 CSS : 항상 insert 되는 애 -->
+	<link rel="stylesheet" type="text/css" href="/css/reset.css">
+	<link rel="stylesheet" type="text/css" href="/css/style.css">
+	<link rel="stylesheet" type="text/css" href="/css/style(sub).css">
+	
+	<!-- 공용 JS : 항상 insert 되는 애 -->
+	<script type="text/javascript" src="/js/common/jquery-3.2.1.js"></script>
+	<script type="text/javascript" src="/js/common/angular/angular.js"></script>
+	<script type="text/javascript" src="/js/common/common.js"></script>
+	
+	<decorator:head/>
+	
+</head>
+<body>
+
+	<!--헤더 -->
+	<header>
+		<div class="head">
+			<c:choose>
+				<c:when test="${sessionScope.loginBean.memberId == 'admin'}">
+					<h1 class="logo">
+					<a href="/admin/adminIndex.do"><img src="/images/logo.jpg" alt="로고" /></a>
+					</h1>
+				</c:when>
+				<c:otherwise>
+				<h1 class="logo">
+					<a href="/index.do"><img src="/images/logo.jpg" alt="로고" /></a>
+				</h1>
+				</c:otherwise>
+			</c:choose>
+
+			<div class="menu_box">
+				<ul class="menu">
+					<li><a href="/index.do">현재상영작</a>
+					<li><a href="/member/memberInfo.do">회원정보/수정</a></li>
+					<li><a href="#">온라인문의</a></li>
+					<li><a href="#">커뮤니티</a>
+				</ul>
+			</div>
+
+		</div>
+
+	</header>
+	<br><br><br><br><br>
+	<!--헤더끝 -->
+
+
+	<decorator:body />
+
+
+	<hr />
+	<div class="grid">
+		<ul>
+			<li>소재지 : 서울특별시 금천구 가산 디지털단지 어딘가 / 대표자 : 윤승렬 / 대표전화 : 0000-0000</li>
+			<li>사업자등록번호 : 금천-가-000-0000 / 통신판매업신고 : 금천-허-00000 / 이메일 :
+				abc@gmail.com</li>
+			<li>Copyright 2017. All right reserved.</li>
+		</ul>
+	</div>
+
+
+
+</body>
+</html>

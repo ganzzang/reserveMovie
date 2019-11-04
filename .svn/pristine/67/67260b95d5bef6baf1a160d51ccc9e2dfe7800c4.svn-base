@@ -1,0 +1,225 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+	pageEncoding="UTF-8"%>
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>영화 추가</title>
+	<script type="text/javascript">
+	
+	function makeCode(){
+		var code = "";
+		var titleEng = $(".titleEng").val();
+		var hall = $("select[name=hall]").val();
+		var opMonth = $("select[name=opMonth]").val();
+		var opDay = $("select[name=opDay]").val();
+		var onDate = opMonth+opDay;
+		var opHour = $("select[name=opHour]").val();
+		var opMin = $("select[name=opMin]").val();
+		var edHour = $("select[name=edHour]").val();
+		var edMin = $("select[name=edMin]").val();
+		var onTime = opHour+opMin+"_"+edHour+edMin;
+		code = titleEng+"_"+hall+"_"+onDate+"_"+onTime;
+		return code;
+	}
+	
+	function makeOptime(){
+		var opMonth = $("select[name=opMonth]").val();
+		var opDay = $("select[name=opDay]").val();
+		var opHour = $("select[name=opHour]").val();
+		var opMin = $("select[name=opMin]").val();
+		var opTime = opMonth+"-"+opDay+" "+opHour+":"+opMin;
+		return opTime;
+	}
+	
+	function makeEdtime(){
+		var edMonth = $("select[name=edMonth]").val();
+		var edDay = $("select[name=edDay]").val();
+		var edHour = $("select[name=edHour]").val();
+		var edMin = $("select[name=edMin]").val();
+		var edTime = edMonth+"-"+edDay+" "+edHour+":"+edMin;
+		return edTime;
+	}
+	
+	function validChk(){
+		var flag = true;
+		var titleEng = $(".titleEng").val();
+		if(titleEng==""){flag = false;}
+		return flag;
+	}
+	
+	function insertProc(){
+		var code = makeCode();
+		var opTime = makeOptime();
+		var edTime = makeEdtime();
+		var flag = validChk();
+		if(flag==false){alert("영어 제목을 입력하세요")}
+		
+		var url = "/admin/insertMovieProc.do";
+		var params = {};
+		params.titleKor = $(".titleKor").val();
+		params.titleEng = $(".titleEng").val();
+		params.hall = $("select[name=hall]").val();
+		params.opTime = opTime;
+		params.edTime = edTime;
+		params.path = "test";
+		params.code = code;
+		
+		$.ajax({      
+	        type: "POST",  
+	        url: url,      
+	        data: params,
+	        success: function(data){   
+	           console.log(data);
+	           
+	           alert(data.resultMsg);
+	           
+	           if(data.result == 'ok') {
+					location.replace('/index.do');	
+	           } 
+	        
+	        },   
+	        error:function(e){  
+	        	console.log(e);  
+	        }  
+	   	});
+	}
+	
+	function insertHallSeat(){
+		var code = makeCode();
+		
+		var url = "/admin/insertHallSeat.do";
+		var params = {};
+		params.hall = $("select[name=hall]").val();
+		params.code = code;
+		
+		$.ajax({      
+	        type: "POST",  
+	        url: url,      
+	        data: params,
+	        success: function(data){   
+	           console.log(data);
+	           
+	           if(data.result == 'ok') {
+					alert("좌석선택 완료");
+	           } 
+	        
+	        },   
+	        error:function(e){  
+	        	console.log(e);  
+	        }  
+	   	});
+	}
+	
+	function back(){	
+		alert("뒤로가기!");
+	}
+	</script>
+</head>
+<body>
+	<table>
+		<form>
+			<tr>
+				<td>한글제목</td>
+				
+				<td><input type="text" class="titleKor"></td>
+			</tr>
+			<tr>
+				<td>영어제목</td>
+				<td><input type="text" class="titleEng"></td>
+			</tr>
+			<tr>
+				<td>상영관</td>
+				<td><select name = "hall">
+				<option value="A">A</option>
+				<option value="B">B</option>
+				<option value="C">C</option>
+				</select><input type="button" value="선택" onclick="insertHallSeat();">
+				</td>
+			</tr>
+			<tr>
+				<td>시작시간</td>
+				<td>
+				<select name = "opMonth">
+					<script type="text/javascript">
+					for(i=1;i<=12;i++){
+						if(i<10){i = "0"+i}
+						document.write('<option value="'+i+'">'+i);
+					}
+				</script>
+				</select>월
+				<select name = "opDay">
+					<script type="text/javascript">
+					for(i=1;i<=31;i++){
+						if(i<10){i = "0"+i}
+						document.write('<option value="'+i+'">'+i);
+					}
+				</script>
+				</select>일
+				<select name = "opHour">
+				<script type="text/javascript">
+					for(i=0;i<24;i++){
+						if(i<10){i = "0"+i}
+						document.write('<option value="'+i+'">'+i);
+					}
+				</script>
+				</select>시
+				<select name = "opMin">
+				<script type="text/javascript">
+					for(i=0;i<60;i++){
+						if(i<10){i = "0"+i}
+						document.write('<option value="'+i+'">'+i);
+					}
+				</script>
+				</select>분
+				</td>
+			</tr>
+				<tr>
+				<td>종료시간</td>
+				<td>
+				<select name = "edMonth">
+					<script type="text/javascript">
+					for(i=1;i<=12;i++){
+						if(i<10){i = "0"+i}
+						document.write('<option value="'+i+'">'+i);
+					}
+				</script>
+				</select>월
+				<select name = "edDay">
+					<script type="text/javascript">
+					for(i=1;i<=31;i++){
+						if(i<10){i = "0"+i}
+						document.write('<option value="'+i+'">'+i);
+					}
+				</script>
+				</select>일
+				<select name = "edHour">
+				<script type="text/javascript">
+					for(i=0;i<24;i++){
+						if(i<10){i = "0"+i}
+						document.write('<option value="'+i+'">'+i);
+					}
+				</script>
+				</select>시
+				<select name = "edMin">
+				<script type="text/javascript">
+					for(i=0;i<60;i++){
+						if(i<10){i = "0"+i}
+						document.write('<option value="'+i+'">'+i);
+					}
+				</script>
+				</select>분
+				</td>
+			</tr>
+			<tr>
+				<td>이미지</td>
+				<td><input type="file"></td>
+			</tr>
+			<tr>
+				<td colspan="2"><input type="button" value="등록" onclick="insertProc();">
+				<input type="button" value="취소" onclick="back();"></td>
+			</tr>
+		</form>
+	</table>
+</body>
+</html>

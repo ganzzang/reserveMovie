@@ -1,0 +1,31 @@
+package com.cinema.web.movie.bean;
+
+// 좌석정보 관리하는 Bean
+public class SeatBean {
+	
+	private String seatNo;
+	private String seatValue;
+	private String code;
+	
+	public String getSeatNo() {
+		return seatNo;
+	}
+	public void setSeatNo(String seatNo) {
+		this.seatNo = seatNo;
+	}
+	public String getSeatValue() {
+		return seatValue;
+	}
+	public void setSeatValue(String seatValue) {
+		this.seatValue = seatValue;
+	}
+	public String getCode() {
+		return code;
+	}
+	public void setCode(String code) {
+		this.code = code;
+	}
+
+	
+	
+}

@@ -1,0 +1,74 @@
+package com.cinema.web.common.controller;
+
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+
+@Controller
+public class CommonController {
+
+	//test
+	@RequestMapping("/test/helloWorld")
+	public String helloWorld() {
+		return "/test/helloWorld";
+	}
+
+	//index
+	@RequestMapping("/index")
+	public String index() {
+		return "/index";
+	}
+	
+	//관리자 메인페이지
+	@RequestMapping("/admin/adminIndex")
+	public String adminIndex() {
+		return "/admin/adminIndex";
+	}
+	
+	//영화 업로드
+	@RequestMapping("/admin/updateMovie")
+	public String updateMovie() {
+		return "/admin/updateMovie";
+	}
+	
+	//관리자 관리페이지
+	@RequestMapping("/admin/adminForm")
+	public String adminForm() {
+		return "/admin/adminForm";
+	}
+	
+	//memberList
+	@RequestMapping("/admin/memberList")
+	public String memberList() {
+		return "/admin/memberList";
+	}
+	
+	//회원가입
+	@RequestMapping("/member/joinMember")
+	public String joinMember() {
+		return "/member/joinMember";
+	}
+	
+	//로그인 전
+	@RequestMapping("/member/loginBf")
+	public String loginBf() {
+		return "/member/loginBf";
+	}
+
+	//로그인 후
+	@RequestMapping("/member/loginAf")
+	public String loginAf() {
+		return "/member/loginAf";
+	}
+	
+	//회원정보
+	@RequestMapping("/member/memberInfo")
+	public String memberInfo() {
+		return "/member/memberInfo";
+	}
+	
+	//영화 예약
+	@RequestMapping("/member/reserveMovie")
+	public String reserveMovie() {
+		return "/member/reserveMovie";
+	}
+}

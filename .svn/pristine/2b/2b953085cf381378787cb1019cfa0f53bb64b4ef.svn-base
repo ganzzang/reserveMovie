@@ -1,0 +1,117 @@
+package com.cinema.web.common.controller;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import com.cinema.web.movie.bean.MovieBean;
+import com.cinema.web.movie.bean.SeatBean;
+import com.cinema.web.movie.service.MovieService;
+
+
+@Controller
+public class CommonController {
+	
+	//서비스 메소드 사용을 위한 객체생성
+	@Autowired
+	private MovieService movieService;
+	
+
+	//test
+	@RequestMapping("/test/helloWorld")
+	public String helloWorld() {
+		return "/test/helloWorld";
+	}
+
+	//index
+	@RequestMapping("/index")
+	public String index() {
+		return "/index";
+	}
+	
+	//관리자 메인페이지
+	@RequestMapping("/admin/adminIndex")
+	public String adminIndex() {
+		return "/admin/adminIndex";
+	}
+	
+	//영화 업로드
+	@RequestMapping("/admin/updateMovie")
+	public String updateMovie() {
+		return "/admin/updateMovie";
+	}
+	
+	//관리자 관리페이지
+	@RequestMapping("/admin/adminForm")
+	public String adminForm() {
+		return "/admin/adminForm";
+	}
+	
+	//memberList
+	@RequestMapping("/admin/memberList")
+	public String memberList() {
+		return "/admin/memberList";
+	}
+	
+	//회원가입
+	@RequestMapping("/member/joinMember")
+	public String joinMember() {
+		return "/member/joinMember";
+	}
+	
+	//로그인 전
+	@RequestMapping("/member/loginBf")
+	public String loginBf() {
+		return "/member/loginBf";
+	}
+
+	//로그인 후
+	@RequestMapping("/member/loginAf")
+	public String loginAf() {
+		return "/member/loginAf";
+	}
+	
+	//회원정보
+	@RequestMapping("/member/memberInfo")
+	public String memberInfo() {
+		return "/member/memberInfo";
+	}
+	//영화 좌석페이지(페이지 이동용)
+	@RequestMapping("/member/reserveMovie")
+	public String selectMemberView(MovieBean movieBean) {
+		return "/member/reserveMovie";
+	}
+	
+	//영화 좌석페이지(ajax통신용)
+	@RequestMapping("/member/reserveMovieAjax")
+	@ResponseBody
+	public Map<String,Object> reserveMovie(MovieBean movieBean) {
+		Map<String,Object> map = new HashMap<String,Object>();
+		String result = "fail";
+		
+		try{
+			
+			//현재 좌석정보 조회
+			List<SeatBean> list = movieService.selectSeat(movieBean);
+			result = "ok";
+			map.put("seatList", list);
+
+		
+		}
+		catch(Exception e){
+			e.printStackTrace();
+		}
+		
+		
+		map.put("result", result);
+
+		return map;
+		
+	}
+}

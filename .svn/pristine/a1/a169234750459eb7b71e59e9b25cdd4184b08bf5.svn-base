@@ -1,0 +1,186 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<META HTTP-EQUIV="Pragma" CONTENT="no-cache">
+<META HTTP-EQUIV="Expires" CONTENT="0">
+<title>Insert title here</title>
+
+<script type="text/javascript">
+		var pagingBean;
+		
+		//리스트 출력
+		function showList(pageNo) {
+			
+			var url = "/movie/selectMovieList.do";
+			var params = {};
+			
+			params.pageNo = pageNo;
+			if(pageNo == null || pageNo == '') {
+				params.pageNo = 1;
+			}
+			
+			$.ajax({      
+		        type: "POST",  
+		        url: url,      
+		        data: params,
+		        success: function(data){   
+		           console.log(data);
+		           		           
+		           if(data.result == 'ok') {
+					
+		        	   $("#movieInfoList").empty();
+		        	   $("#pageList").empty();
+		        	   
+		        	   pagingBean = data.pagingBean;
+		        	   
+		        	   for(var i=0; i<data.movieList.length; i++) {
+		        		   
+		        		   var bean = data.movieList[i];
+		        		   
+		        		   var str = 
+		        			   '<tr>' 
+					   			+ '<td align="center" style="cursor:pointer" onclick="selectMovie(\'' + bean.code + '\')">' + '<img src=' + bean.path + ' width=200px height=300px>' + '</td>'
+					   			+ '<td align="center" style="cursor:pointer" onclick="selectMovie(\'' + bean.code + '\')">' + bean.titleKor + '</td>'
+					   			+ '<td align="center" style="cursor:pointer" onclick="selectMovie(\'' + bean.code + '\')">' + bean.hall + '</td>'
+					   			+ '<td align="center" style="cursor:pointer" onclick="selectMovie(\'' + bean.code + '\')">' + (bean.totSeat-bean.revSeat) + '</td>'
+					   			+ '<td align="center"style="cursor:pointer" onclick="selectMovie(\'' + bean.code + '\')">' 
+				   					+ bean.opTimeYear + '년' + bean.opTimeMonth + '월' + bean.opTimeDay + '일' 
+				   					+ bean.opTimeHh + '시' + bean.opTimeMi + '분' + '</td>'
+			   				+ '</tr>';
+			   				
+			   				$("#movieInfoList").append( str );
+			   				
+		        	   }//end for
+		        	   
+		        	   
+		        	   //페이징 출력
+		        	   var pBean = data.pagingBean;
+		        	   var str = "";
+		        	   
+		        	   //그룹번호 달아주기
+	        		   if(pBean.groupNo > 1 ) {
+	        			   str += " [<span onclick='showList(" 
+	        				   + (pBean.pageStartNo-1) + ")' style='cursor:pointer'>이전</span>] ";   
+	        		   }
+		        	   
+		        	   for(var i=pBean.pageStartNo; i<=pBean.pageEndNo; i++) {
+		        		   if(i == pBean.pageNo) {
+		        			   str += "[<span>" + i + "</span>] &nbsp;";   
+		        		   } else {
+		        			   str += '[<span onclick="showList(' 
+		        				   	+ i + ')" style="cursor:pointer; color:blue;">' + i + '</span>] &nbsp;';   
+		        		   }
+		        	   }
+		        	   
+		        	   //그룹번호 달아주기
+	        		   if(pBean.groupNo < pBean.totalGroupCount ) {
+	        			   str += " [<span onclick='showList(" 
+	        				   + (pBean.pageEndNo+1) + ")' style='cursor:pointer'>다음</span>] ";   
+	        		   }
+	        		   
+		        	   
+		        	   $("#pageList").append(str);
+
+		           }//end if
+		        
+		        },   
+		        error:function(e){  
+		        	console.log(e);  
+		        }  
+		   	});
+			
+		}
+
+		$(function() {
+			window.onbeforeunload = function(){
+
+	      		alert("111");
+
+	    	};
+			
+			showList('${param.pageNo}');
+		});
+		
+		// 페이지 이동 
+		function moveTo(i){
+			// admin 아이디로 회원가입시 전체목록 출력	
+			if(i == 'selectMemberList'){
+				location.replace("/member/selectMemberList.do");
+			}
+			// 본인정보만 출력
+			else if(i == 'selectMember'){
+				location.replace("/member/selectMember.do?memberId=${sessionScope.loginBean.memberId}");
+			}
+			else if(i == 'join'){
+				location.replace("/member/joinMember.do");
+			}
+			// 로그아웃
+			else if(i == 'logout'){
+				location.replace("/member/logout.do");
+			}
+			else if(i == 'adminIndex'){
+				location.replace("/admin/adminIndex.do");
+			}
+		}
+		
+		function selectMovie(code){
+			location.replace("/movie/selectMovie.do?code=" + code);
+		}
+		
+	</script>
+
+</head>
+<body>
+<body>	
+	<table>
+		<tr>
+			<td>
+				
+				<table align="center" cellspacing="0" cellpadding="0" width="180px">
+					<tr>
+						<td>
+							<c:choose>
+								<c:when test="${sessionScope.loginBean.memberId != null}">
+									<c:if test="${sessionScope.loginBean.memberId == 'admin'}">
+										<meta http-equiv="refresh" content="0;URL='/admin/adminIndex.do'">
+									</c:if>
+									${sessionScope.loginBean.name}님 환영합니다.!!!
+									<br><input type="button" value="예약정보" style="cursor:pointer" onclick="moveTo('selectMember')">
+									<input type="button" value="로그아웃" style="cursor:pointer" onclick="moveTo('logout')">
+									
+								</c:when>
+								<c:otherwise>
+									<form action="/member/loginProc.do" method="POST">
+										ID : <input type="text" name="memberId"> 
+										PW : <input type="password" name="password"> 
+										<input type="submit" value="로그인" style="cursor:pointer">
+										<input type="button" value="회원가입" style="cursor:pointer" onclick="moveTo('join')">
+									</form>
+								</c:otherwise>
+							</c:choose>
+						</td>
+					</tr>
+				</table>
+				
+			</td>
+			<td>
+				<table border="1" align="center" cellspacing="0" cellpadding="0" width="800px">
+					<tr>
+						<th>이미지</th>
+						<th>제목</th>
+						<th>상영관</th>
+						<th>잔여좌석</th>
+						<th>상영시간</th>
+					</tr>
+						<tbody id="movieInfoList"></tbody>
+				</table>
+			</td>
+		</tr>
+	</table>
+</html>

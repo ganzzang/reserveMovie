@@ -1,0 +1,276 @@
+package com.cinema.web.member.controller;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import com.cinema.web.common.constant.CommonConst;
+import com.cinema.web.member.bean.MemberBean;
+import com.cinema.web.member.service.MemberService;
+import com.cinema.web.movie.bean.MovieBean;
+import com.cinema.web.movie.bean.ReserveBean;
+import com.cinema.web.movie.bean.SeatBean;
+
+@Controller
+public class MemberController {
+	
+	@Autowired
+	private MemberService memberService;
+	
+	// joinMember : 회원가입
+	@RequestMapping("/member/insertJoinProc")
+	public String insertJoinProc(MemberBean memberBean, Model model, HttpSession session) {
+		
+		String rtnUrl = "";
+		// 확인용
+		session.setAttribute("insertBean", memberBean);
+		
+		try {
+			int rtnVal =  memberService.insertMember(memberBean);
+			
+			//성공
+			if(rtnVal > 0) {
+			
+				rtnUrl = "/index.do";
+				//session.removeAttribute("insertBean");
+				session.setAttribute("loginBean", memberBean);
+			} 
+			//실패
+			else {
+				rtnUrl = "/index.do";
+			}
+			
+		} catch(Exception e) {
+			e.printStackTrace();
+			//response
+			model.addAttribute("result", "fail");
+			model.addAttribute("resultMsg", e.getMessage());
+			
+			rtnUrl = "/member/joinMember.do";
+		}
+		return "redirect:" + rtnUrl;
+	}
+	
+	// 멤버리스트/검색
+	// 해당 아이디에 상응하는 회원정보 출력 + 예매정보 출력
+	@RequestMapping("/member/selectMember")
+	public String selectMember(MemberBean memberBean, HttpSession session, HttpServletRequest request,
+			Model model, ReserveBean reserveBean) 
+	{
+		
+		memberBean = (MemberBean)session.getAttribute(CommonConst.LOGIN_MEMBER_BEAN);
+		reserveBean.setId(memberBean.getMemberId());
+		
+		MemberBean mBean = memberService.selectMember(memberBean);
+		List<ReserveBean> revlist =memberService.selectReserve(reserveBean);
+		
+		// 예약정보, 회원정보 저장
+		model.addAttribute("reserveList", revlist);
+		model.addAttribute("memberBean", mBean);
+		
+		return "/member/memberInfo";
+	}
+	
+	// id 중복체크
+	@RequestMapping("/member/idDuplCheckAjax")
+	@ResponseBody
+	public Map<String,Object> selectMemberAjax(MemberBean memberBean, Model model, HttpSession session) 
+	{
+		Map<String,Object> map = new HashMap<String,Object>();
+		
+		MemberBean mBean =  memberService.selectMember(memberBean);
+			
+			if(mBean != null ){
+				map.put(CommonConst.RESULT, CommonConst.RESULT_FAIL);
+				map.put(CommonConst.RESULT_MSG, "중복된 id입니다");			
+			}
+			else{
+				map.put(CommonConst.RESULT, CommonConst.RESULT_OK);
+				map.put(CommonConst.RESULT_MSG, "이용가능한 id입니다");	
+			}
+			return map;
+	}
+	
+	//	email 중복체크
+	@RequestMapping("/member/emailDupleCheckAjax")
+	@ResponseBody
+	public Map<String,Object> emailDupleCheckAjax(MemberBean memberBean, Model model, HttpSession session) 
+	{
+		Map<String,Object> map = new HashMap<String,Object>();
+		
+		MemberBean mBean =  memberService.emailcheck(memberBean);
+			
+			if(mBean != null ){
+				map.put(CommonConst.RESULT, CommonConst.RESULT_FAIL);
+				map.put(CommonConst.RESULT_MSG, "중복된 email입니다");			
+			}
+			else{
+				map.put(CommonConst.RESULT, CommonConst.RESULT_OK);
+				map.put(CommonConst.RESULT_MSG, "이용가능한 email입니다");	
+			}
+			return map;
+	}
+	
+	// 로그인 진행
+	@RequestMapping("/member/loginProc")
+	public String loginProc(MemberBean mBean, HttpSession session, Model model) {
+		
+		boolean resBool = memberService.selectLoginMember(mBean);
+	
+		if(resBool) {
+			MemberBean selBean = memberService.selectMember(mBean);
+			//세션에 저장                            
+			session.setAttribute("loginBean", selBean);
+			
+			MemberBean tmp = (MemberBean)session.getAttribute("loginBean");
+			String str="";
+			str=tmp.getMemberId();
+			
+			if(str.equals("admin")){
+				return "redirect:/admin/adminIndex.do";
+			}
+			else {
+				 return "redirect:/index.do";
+			}
+		}
+		model.addAttribute("resultMsg", "로그인에 실패하였습니다. ID/PW를 확인해 주십시오.");
+		return "redirect:/index.do";
+	}
+	
+	// 회원목록 조회
+	@RequestMapping("/member/selectMemberList")
+	public String selectMemberList(MemberBean mBean, Model model) {
+	
+		List<MemberBean> list =memberService.selectMemberList(mBean);
+		
+		model.addAttribute("memberList", list);
+
+		return "/admin/memberList";
+	}
+	
+	//로그아웃
+	@RequestMapping("/member/logout")
+	public String logout(MemberBean mBean, HttpSession session){
+		session.removeAttribute("loginBean");
+		return "redirect:/index.do";
+	}
+
+	//회원정보
+	@RequestMapping("/member/updateMember")
+	public String memberInfo(MemberBean bean, Model model, HttpSession session) {
+		
+		MemberBean mBean = memberService.selectMember(bean);
+		
+		model.addAttribute("memberBean", mBean);
+		
+		return "/member/updateMember";
+
+	}
+	
+	// updateMember : 회원정보수정
+	@RequestMapping("/member/updateMemberForm")
+	public String updateMember(MemberBean mBean, Model model, HttpSession session){
+		
+		int intVal = memberService.updateMember(mBean);
+		
+		if(intVal > 0) {
+			//업데이트 성공
+			
+			MemberBean tmp = (MemberBean)session.getAttribute("loginBean");
+			String str="";
+			str=tmp.getMemberId();
+
+			if(str.equals("admin")){
+				return "redirect:/member/selectMemberList.do";
+			}
+			return "redirect:/member/selectMember.do?memberId=" + mBean.getMemberId();
+			
+		}
+		
+		model.addAttribute("result", "fail");
+		model.addAttribute("resultMsg", "회원정보 수정에 실패하였습니다.");
+		
+		return "redirect:/index.do";
+	}
+			
+	// deleteMember : 회원탈퇴, 회원정보 삭제
+	@RequestMapping("/member/delete")
+	public String delete(MemberBean mBean, Model model, HttpSession session, ReserveBean rBean){
+		
+		int intVal1 = memberService.deleteMember(mBean);
+		rBean.setId(mBean.getMemberId());
+		int intVal2 = memberService.updateSeat(rBean);
+	
+		if(intVal1 > 0 && intVal2 > 0) {
+			
+			MemberBean tmp = (MemberBean)session.getAttribute("loginBean");
+			String str="";
+			str=tmp.getMemberId();
+
+			if(str.equals("admin")){
+				return "redirect:/member/selectMemberList.do";
+			}
+				return "redirect:/index.do";
+			
+		}
+		
+		model.addAttribute("result", "fail");
+		model.addAttribute("resultMsg", "회원정보 삭제에 실패 하였습니다.");
+		
+		return "redirect:/member/selectMember.do?memberId=" + mBean.getMemberId();
+	}
+	
+	@RequestMapping("/member/deleteSeat")
+	public String deleteSeat(ReserveBean reserveBean, Model model, HttpSession session){
+		
+		int intVal1 = memberService.deleteSeat(reserveBean);
+		int intVal2 = memberService.deleteReserve(reserveBean);
+
+		if(intVal1 > 0 && intVal2 > 0) {
+			
+			MemberBean tmp = (MemberBean)session.getAttribute("loginBean");
+			String str="";
+			str=tmp.getMemberId();
+
+			if(str.equals("admin")){
+				return "redirect:/member/selectMemberList.do";
+			}
+				return "redirect:/member/selectMember.do?memberId=" + reserveBean.getId();
+		}
+			
+		model.addAttribute("result", "fail");
+		model.addAttribute("resultMsg", "영화 예약 삭제에 실패 하였습니다.");
+		
+		return "redirect:/member/selectMember.do?memberId=" + reserveBean.getId();
+	}
+	
+	@RequestMapping("/member/deleteSeatAjax")
+	@ResponseBody
+	public Map<String, Object>deleteSeatAjax(ReserveBean reserveBean, HttpSession session){
+		Map<String, Object> map = new HashMap<String, Object>();
+		String result = CommonConst.RESULT_FAIL;
+		try{
+			int intVal1 = memberService.deleteSeat(reserveBean);
+			int intVal2 = memberService.deleteReserve(reserveBean);
+			//성공
+			if(intVal1>0 && intVal2>0){
+				result = CommonConst.RESULT_OK;
+			}
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+		map.put(CommonConst.RESULT, result);
+		return map;
+	}
+	
+	
+}

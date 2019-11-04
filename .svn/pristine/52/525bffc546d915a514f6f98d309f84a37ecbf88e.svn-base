@@ -1,0 +1,145 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<script type="text/javascript" src="/js/member/memberApp.js"></script>
+<script type="text/javascript" src="/js/member/memberController.js"></script>
+</head>
+<script type="text/javascript">
+
+	function updateSeatValue(id){
+		
+		
+		var url = "/member/reserveMovieAjax.do"
+			var params={};
+			params.seatNo=id;
+			
+			$.ajax({
+				type:"GET"
+				,url:url
+				,data:params
+				,success:function(data){
+					 console.log(data);
+			           
+					if(data.result=='ok'){
+						console.log(data);
+						alert(data.resultMsg);
+					}else if(data.result=='fail'){
+						alert("이미 선택된 좌석입니다");
+						//TODO 리로드해주기
+					}
+					
+					
+				},error:function(e){
+					console.log(data);
+					alert(data.resultMsg);
+				}
+		
+			})
+	}
+
+				
+$(document).ready(function(){
+	
+		var url = "/member/reserveMovieAjax.do"
+		var params={};
+		params.hall='A';
+		params.titleEng='FATE';
+		params.opTime='2017-12-12_12';
+		
+		$.ajax({
+			type:"GET"
+			,url:url
+			,data:params
+			,success:function(data){
+				 console.log(data);
+		           
+				if(data.result=='ok'){
+					console.log(data);
+					// var tmp = data.seatList[1].seatValue; 아래에서 쓸 것 
+
+	
+						// 테이블 생성
+						document.write( "<table align='center' border='1' cellspacing='0' cellpadding='0'>" );
+						var str = " ";
+						var arr = ["A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z"];
+						// 값 입력
+						var a = prompt("몇 행", "");
+						var b = prompt("몇 열", "");
+						// 임의의 숫자형 변수
+						var next = "0";
+						// 문자를 숫자로 변환 시킬 값
+						var num = new Number();
+						
+						var seatValue = "";
+						
+						for ( var i=0; i<a; i++ )
+						{
+							document.write( "<tr>" );
+								for ( var j=1; j<=b; j++ )
+								{
+
+										seatValue = data.seatList[num].seatValue;
+										
+										if( seatValue == "N"){
+											
+												str = arr[i] + j;
+												num = Number(next) + Number(j);
+												document.write( "<td name='"+str+"' id='"+num+"'><span onClick='updateSeatValue( $(\" "+'[id='+num+']'+"\").attr(\"id\")) ' style='cursor:pointer'>" + str + "</span></td>" );
+
+												//alert 주석
+												//'alert(\"show number =\" "+'+'+" $(\""+'[id='+num+']'+"\").text() "+'+'+" \" & \" "+'+'+" \"seat number =\" "+'+'+" $(\""+'[id='+num+']'+"\").attr(\"id\"))' style='cursor:pointer'>" + str + "</span></td>" );
+												
+												
+												// 구현체
+											
+										} else {
+											
+											str = arr[i] + j;
+											num = Number(next) + Number(j);
+											document.write( "<td name='"+str+"' id='"+num+"'>" + str + "</td>" );
+										}
+												
+										
+								};
+							document.write( "</tr>" );
+							// 값 이동
+							next = num;
+						};
+						
+						document.write( "</table>" );
+					
+				}
+					
+					
+					
+					
+					
+				
+			},error:function(e){
+				console.log(e);
+			}
+			
+		});//Ajax끝
+
+	
+})
+
+
+
+	
+
+</script>
+
+<body>
+	
+	<br>
+	<div align="center">
+	<input type="button" value="예약" onCLick="alert('예약')">
+	<input type="button" value="취소" onClick="alert('취소')">
+	</div>
+
+</body>
+</html>

@@ -1,0 +1,54 @@
+package com.cinema.web.movie.service;
+
+import java.util.List;
+
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.cinema.web.movie.bean.MovieBean;
+import com.cinema.web.movie.bean.ReserveBean;
+import com.cinema.web.movie.bean.SeatBean;
+import com.cinema.web.movie.dao.MovieDao;
+
+
+@Service
+public class MovieServiceImpl implements MovieService {
+	
+
+
+	@Autowired
+	private MovieDao movieDao;
+
+	//현재 좌석정보 조회
+	public List<SeatBean> selectSeat(MovieBean movieBean){
+		
+		String titleEng = movieBean.getTitleEng();
+		String hall = movieBean.getHall();
+		String opTime = movieBean.getOpTime();
+		
+		//TODO 4번째까지 년도, 그 뒤에 두자리가 월, 그 뒤에 나머지가 시간. 
+		// 년도-월-일_시간:분 이 구도로 데이터 바꿔줘서 seatBean에 세팅해주기
+		
+		String code = titleEng+'_'+hall+'_'+opTime;
+		
+		SeatBean seatBean = new SeatBean();
+		seatBean.setCode(code);
+		
+		return movieDao.selectSeat(seatBean);		
+		
+	}
+
+	// addMovie : 영화등록
+	
+	// updateMovie : 영화수정
+	
+	// deleteMovie : 영화삭제
+	
+	// selectMovie : 영화리스트
+	
+	// addHall : 영화관추가 
+	
+	// deleteHall : 영화관 삭제
+	
+}

@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.cinema.web.member.dao.MemberDao">
+
+<sql id="movieColums">
+		ID,
+		ID as memberId,
+		PW as password,
+		NAME,
+		EMAIL,
+		TEL,
+		REGDATE AS regDate
+	</sql>
+	
+	<select id="selectMember" parameterType="memberBean" resultType="memberBean">
+		SELECT
+		<!--  <include refid="movieColums" />-->
+		ID as memberId,
+		NAME,
+		EMAIL,
+		TEL,
+		REGDATE AS regDate
+		FROM
+		HR.MV_MEMBER
+		WHERE
+		ID = #{memberId}
+	</select>
+	
+	<!-- 회원테이블 삽입 -->
+	<insert id="insertMember" parameterType="memberBean">
+		INSERT INTO HR.MV_MEMBER
+		(
+		ID,
+		PW,
+		NAME,
+		EMAIL,
+		TEL
+		)
+		VALUES
+		(
+		#{memberId},
+		#{password},
+		#{name},
+		#{email},
+		#{tel}
+		)
+	</insert>
+
+	<!-- 로그인 진행 -->
+	<select id="selectLoginMember" parameterType="memberBean" resultType="int">
+		SELECT
+		COUNT(*)
+		FROM
+		HR.MV_MEMBER
+		WHERE
+		ID = #{memberId} AND PW = #{password}
+	</select>
+	
+	<!-- 전 회원목록 출력 -->
+	<select id="selectMemberList" parameterType="memberBean" resultType="memberBean">
+		SELECT
+		<include refid="movieColums" />
+		FROM
+		HR.MV_MEMBER
+	</select>
+	
+		<!-- 회원정보 수정 -->
+	<update id="updateMember" parameterType="memberBean">
+		UPDATE HR.MV_MEMBER
+		SET
+		NAME = #{name}
+		,EMAIL = #{email}
+		,TEL = #{tel}
+		WHERE
+		ID = #{memberId}
+	</update>
+	
+	<!-- 회원정보 삭제 -->
+	<delete id="deleteMember" parameterType="memberBean">
+		DELETE HR.MV_MEMBER
+		WHERE
+		ID = #{memberId}
+	</delete>
+	
+	<!-- 예약정보 삽입 -->
+	<insert id="reserveMovie" parameterType="SeatBean">
+		INSERT INTO HR.MV_REV
+		(
+		ID,
+		CODE,
+		SEAT_SHOW,
+		SEAT_HIDDEN
+		)
+		VALUES
+		(
+		#{id},
+		#{code},
+		#{seat_show},
+		#{seat_hidden}
+		)
+	</insert>
+	
+	<!--  예약정보  출력-->
+	<select id="selectReserve" parameterType="reserveBean" resultType="reserveBean">
+	
+	SELECT  
+		HR.MV_MOVIE.TITLE_KOR AS titleKor,
+		HR.MV_REV.HALL AS hall,
+		TO_CHAR(HR.MV_MOVIE.OP_TIME,'YYYY_MM_DD') AS opTime,
+		HR.MV_REV.SEAT_SHOW AS seatShow
+	FROM 
+		HR.MV_REV INNER JOIN HR.MV_MOVIE 
+	USING(CODE) 
+	WHERE ID = #{id}
+	
+	
+	</select>
+</mapper>

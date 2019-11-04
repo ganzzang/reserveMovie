@@ -1,0 +1,16 @@
+package com.cinema.web.member.controller;
+
+import org.springframework.web.bind.annotation.RequestMapping;
+
+public class MemberController {
+	
+	// joinMember : 회원가입
+	
+	// updateMember : 회원정보수정
+	
+	// deleteMember : 회원탈퇴
+	
+	// selectMember : 멤버리스트/검색
+	
+	
+}

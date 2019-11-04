@@ -1,0 +1,20 @@
+package com.cinema.web.movie.service;
+
+import org.springframework.stereotype.Service;
+
+@Service
+public class MovieServiceImpl implements MovieService {
+
+	// addMovie : 영화등록
+	
+	// updateMovie : 영화수정
+	
+	// deleteMovie : 영화삭제
+	
+	// selectMovie : 영화리스트
+	
+	// addHall : 영화관추가 
+	
+	// deleteHall : 영화관 삭제
+	
+}

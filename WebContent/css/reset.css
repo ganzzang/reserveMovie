@@ -1,0 +1,23 @@
+@charset "utf-8";
+
+@import url("http://fonts.googleapis.com/earlyaccess/notosanskr.css");
+@import url("https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900");
+
+/*아이폰 사파리 회전시 폰트 사이즈 변경 버그*/
+*{-webkit-text-size-adjust:none;  box-sizing:border-box}
+
+::selection {color:#fff; background:#000}
+html, body{font-family:'Noto Sans KR', sans-serif, dotum, '돋움', gulim, '굴림', Arial, AppleGothic, verdana, helvetica; font-size:14px; letter-spacing:-0.05em; line-height:1.6; font-weight:400; color:#333; margin:0; overflow-x:hidden; !important;}
+a		    {color:#333333; text-decoration:none;}
+a:link      {color:#333333; text-decoration:none;transition:all .3s ease}
+a:visited   {color:#333333; text-decoration:none}
+a:active    {color:#333333; text-decoration:none}
+a:hover     {color:#666666; text-decoration:none}
+form, p, h1, h2, h3, h4, h5, h6 {margin:0; padding:0}
+fieldset, img {margin:0; padding:0; border:0}
+caption, legend {display:none}
+address, em, i {font-style:normal}
+ul, ol {list-style-type:none; margin:0; padding:0}
+input, button, select {font:inherit;}
+button, a{cursor: pointer;}
+*:focus {outline:none}

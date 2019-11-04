@@ -1,0 +1,204 @@
+package com.cinema.web.movie.service;
+
+
+import java.util.List;
+
+import javax.servlet.http.HttpSession;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import com.cinema.web.common.bean.PagingBean;
+import com.cinema.web.common.constant.CommonConst;
+import com.cinema.web.member.bean.MemberBean;
+import com.cinema.web.movie.bean.MovieBean;
+import com.cinema.web.movie.bean.ReserveBean;
+import com.cinema.web.movie.bean.SeatBean;
+import com.cinema.web.movie.dao.MovieDao;
+
+
+@Service
+public class MovieServiceImpl implements MovieService {
+
+	@Autowired
+	private MovieDao movieDao;
+
+	//현재 좌석정보 조회
+	public List<SeatBean> selectSeat(MovieBean movieBean){
+		
+		String code = movieBean.getCode();
+		
+		SeatBean seatBean = new SeatBean();
+		seatBean.setCode(code);
+		
+		//TODO 숫자>좌석으로 바꿔주기
+		
+		return movieDao.selectSeat(seatBean);		
+		
+	}
+	// ajax용, 실시간 좌석 예약가능여부 확인 코드
+	public SeatBean selectSeatValue(SeatBean seatBean,HttpSession session){
+		
+		MovieBean movieBean = (MovieBean)session.getAttribute(CommonConst.SEAT_MOIVE_BEAN);
+		
+		String code = movieBean.getCode();
+		seatBean.setCode(code);
+		
+		return movieDao.selectSeatValue(seatBean);
+		
+	};
+	// 영화 예매(좌석정보 update + 예약정보 insert), 둘 중 하나라도 실패하면 안 된다
+	@Transactional
+	public int reserveMovie(SeatBean seatBean,HttpSession session)throws DataIntegrityViolationException{
+		
+		String[] seatHiddenArr;
+		int totSeat=0;
+		int seatCnt=0;
+		int revCnt=0;
+		SeatBean sBean = new SeatBean();
+		
+		//session정보 받아오기
+		MovieBean movieBean = new MovieBean();
+		movieBean = (MovieBean)session.getAttribute(CommonConst.SEAT_MOIVE_BEAN);
+		MemberBean memberBean = new MemberBean();
+		memberBean = (MemberBean)session.getAttribute(CommonConst.LOGIN_MEMBER_BEAN);
+		
+		String code = movieBean.getCode(); //sBean에 코드 넣어줘야해서
+		
+		//update
+		seatHiddenArr = seatBean.getRevRequestSeatArr();
+		for(int i =0; i<seatHiddenArr.length;i++){
+			sBean.setRevRequestSeat(seatHiddenArr[i]);
+			sBean.setCode(code);
+			seatCnt = movieDao.reserveMovie(sBean);
+			totSeat = totSeat + seatCnt;
+		}
+		//예약테이블에 insert
+		String[] seatShowArr;
+		ReserveBean rBean = new ReserveBean();
+		seatShowArr = seatBean.getRevRequestShowSeatArr();
+
+		
+		//rBean에 코드/id 넣어주기(예약 테이블에 넣으려고)
+
+		String memberId = memberBean.getMemberId();
+		String hall = movieBean.getHall();
+			
+		rBean.setCode(code);
+		rBean.setId(memberId);
+		rBean.setHall(hall);
+		
+		//rev에 같은 좌석 예약되어있으면 튕기게 하기
+
+			for(int i=0; i<seatShowArr.length;i++){
+				rBean.setSeatHidden(seatHiddenArr[i]);
+				rBean.setSeatShow(seatShowArr[i]);
+				revCnt = revCnt+ movieDao.insertRev(rBean);
+			}
+		//seatDB와 revDB의 처리개수가 일치하다면, 아닐시는 강제로 0 리턴시키기
+		if(totSeat==revCnt){
+			return totSeat;		
+		}
+		else{
+			return 0;
+		}
+	}
+
+	// 예매된 좌석 숫자
+	public int selectRevSeatCount(MovieBean movieBean){
+		
+		String code = movieBean.getCode();
+		
+		SeatBean seatBean = new SeatBean();
+		seatBean.setCode(code);
+		
+		return movieDao.selectRevSeatCount(seatBean);
+	}
+		
+	// 전 좌석 숫자
+	public int selectTotalSeatCount(MovieBean movieBean){
+		
+		String code = movieBean.getCode();
+		
+		SeatBean seatBean = new SeatBean();
+		seatBean.setCode(code);
+		
+		return movieDao.selectTotalSeatCount(seatBean);
+	}
+	
+
+	// insertMovie : 영화등록
+	public int insertMovie(MovieBean movieBean) throws Exception {
+		return movieDao.insertMovie(movieBean);
+	}
+		
+	/* version 68
+	// insertSeat : 시트 등록
+	public int insertSeat(SeatBean seatBean){
+		return movieDao.insertSeat(seatBean);
+	}
+	*/
+
+	// insertHallSeat : 영화관 좌석 등록
+	public int insertHallSeat(SeatBean seatBean) throws Exception {
+		return movieDao.insertHallSeat(seatBean);
+	}
+
+	// updateMovie : 영화수정
+	public int updateMovie(MovieBean movieBean){
+	return movieDao.updateMovie(movieBean);
+	}
+	
+	// selectMovie : 영화리스트
+	public List<MovieBean> selectMovieList(PagingBean pagingBean){
+    return movieDao.selectMovieList(pagingBean);
+    }
+	
+	public MovieBean selectMovie(MovieBean movieBean){
+		MovieBean mBean = movieDao.selectMovie(movieBean);
+		String hall = mBean.getHall();
+		
+		//영화관에 따라 좌석이 다르게 나오게 하기
+		if(hall.equals("A")){
+			mBean.setSeatCntX(10);
+			mBean.setSeatCntY(10);
+		}else if(hall.equals("B")){
+			mBean.setSeatCntX(7);
+			mBean.setSeatCntY(10);
+		}else if(hall.equals("C")){
+			mBean.setSeatCntX(10);
+			mBean.setSeatCntY(5);
+		}
+		
+		return mBean;
+	}
+	
+	public int selectListTotCount(PagingBean pagingBean){
+		return movieDao.selectListTotCount(pagingBean);
+	}
+	
+	// addHall : 영화관추가 
+	
+	// deleteMovie : 영화삭제
+	public int deleteMovie(MovieBean bean){
+		return movieDao.deleteMovie(bean);
+	}
+		
+	// deleteHall : 영화관 삭제
+	public int deleteHall(SeatBean bean){
+		return movieDao.deleteHall(bean);
+	}
+	
+	/* version 68
+	// 영화 삭제
+	public int deleteMovie(MovieBean movieBean){
+		return movieDao.deleteMovie(movieBean);
+	}
+	
+	// 영화와 연결된 시트들 삭제
+	public int deleteSeat(SeatBean seatBean){
+		return movieDao.deleteSeat(seatBean);
+	}*/
+}

@@ -1,0 +1,43 @@
+package com.cinema.web.member.service;
+
+import java.util.List;
+
+import com.cinema.web.member.bean.MemberBean;
+import com.cinema.web.movie.bean.ReserveBean;
+import com.cinema.web.movie.bean.SeatBean;
+
+public interface MemberService {
+	
+	/** 한명의 회원을 조회한다. */
+	public MemberBean selectMember(MemberBean bean);
+	
+	/* 중복 이메일을 확인한다. */
+	public MemberBean emailcheck(MemberBean bean);
+	
+	/** 한명의 회원을 삽입한다. **/
+	public int insertMember(MemberBean bean) throws Exception;
+	
+	/** 로그인 진행 **/
+	public boolean selectLoginMember(MemberBean bean);
+		
+	/** 전 회원 목록 출력**/
+	public List<MemberBean>  selectMemberList(MemberBean bean);
+
+	/** 회원정보 수정 **/
+	public int updateMember(MemberBean bean);
+		
+	// deleteMember : 회원탈퇴
+	public int deleteMember(MemberBean bean);
+	
+	//예약정보 출력
+	public List<ReserveBean> selectReserve(ReserveBean reserveBean);
+	
+	// 회원 정보 삭제시 좌석 삭제
+	public int deleteSeat(ReserveBean bean);
+	public int deleteReserve(ReserveBean bean);
+
+	// 회원 정보 삭제시 좌석 'N' 변경
+	public int updateSeat(ReserveBean bean);
+	
+
+}

@@ -1,0 +1,96 @@
+@charset "utf-8";
+
+
+
+.sub_wrap{width: 100%;}
+
+.sub_bg{height: 500px; position: relative;width: 100%; text-align: center;}
+.sub_bg img {width: 1920px; height: 100%;}
+.sub_bg h1{position: absolute;width: 100%; top: 50%; font-size: 50px; color: #fff;text-shadow: -2px -2px 4px #688614;}
+
+.sub_nav{width: 1200px; margin: 50px auto 0; min-height: 800px;}
+.sub_nav:after{content: ""; display: block; clear: both;}
+.sub_menu{width: 200px; float: left; padding: 0;}
+.sub_menu h3{font-size: 24px; color: #454545; font-weight: 600; line-height: 1.60em;}
+.sub_menu ul{width: 100%; border-top: 1px solid #222;}
+.sub_menu ul li{width: 100%; border-bottom: 1px solid #ddd;}
+.sub_menu ul li a{display: block; line-height: 45px; padding: 0 6%; }
+.sub_menu ul li a:hover{background-color: #f2f2f2; color: #666}
+.sub_menu ul li a.on{background-color: #f2f2f2; color: #666}
+
+.sub_title{width: 990px; float: right;padding-bottom: 5px; border-bottom: 1px solid #ddd;}
+.sub_title:after{content: ""; display: block; clear: both;}
+.sub_title .rout{width: 150px; float: right;text-align: center;}
+.sub_title .rout ul li{display: inline-block; color: #666; font-size: 12px; margin-top: 10px;}
+.sub_title h2{width: 800px; float: left; padding-left: 10px; font-size: }
+.sub_content{width: 990px; float: right; max-width: 100%; padding: 30px 10px;}
+.sub_content:after{content: ""; display: block; clear: both;}
+
+
+.notice_table{width: 100%;}
+.notice_table table{width: 100%; border-collapse: collapse;}
+.notice_table table tr th{padding:5px 3px; background-color: #606a73; color: #fff; border-bottom: 2px solid #606a73; border-top: 1px solid #ddd; font-weight: 400;}
+.notice_table table tr:nth-child(odd){background-color: #f9f9f9;}
+.notice_table table tr td{text-align: center; padding: 3px; border-bottom: 1px solid #ddd;}
+.notice_table table tr td:nth-child(2){text-align: left;}
+.notice_table table tr td:nth-child(2) a:hover{color: #000; text-decoration: underline;}
+.notice_table table tr:last-child td{border-bottom: 1px solid #aaa;}
+
+.btn_wrap{width: 100%; margin-bottom: 8px;}
+.btn_wrap:after{content: ""; display: block; clear: both;}
+.btn_wrap .btn_write{background-color: #606a73; border: none; color: #fff;width: 80px; height: 30px;}
+.btn_wrap .find{float: right;}
+.btn_wrap .find input[type="text"]{height: 30px; border: 1px solid #ccc; padding: 5px;}
+.btn_wrap .find .btn_find{background-color: #f2f2f2; border: 1px solid #ccc; color: #666; height: 30px;}
+
+.page{width: 100%; text-align: center; margin-top: 20px;}
+.page ul:after{content: ""; display: block; clear: both;}
+.page ul{display: inline-block;}
+.page ul li{width: 30px;height: 30px; line-height: 30px; float: left;}
+.page ul li a{display: block;}
+.page ul li a:hover{color: #606a73;}
+.page ul li a.on{background-color: #606a73; color: #fff;}
+
+
+.write_table{width: 100%; text-align: center;}
+.write_table table{width: 100%; border-collapse: separate; border-spacing: 1px;text-align: left; line-height: 1.5; border-top: 1px solid #ccc; margin: 20px 10px; border-top: 2px solid #606a73;}
+.write_table table tr.answer td{background-color: #f9f9f9; color: #666;}
+.write_table table tr th{ padding: 10px; font-weight: bold; vertical-align: top;;border-bottom: 1px solid #ccc; background: #efefef; width: 20%;}
+.write_table table tr td{ padding:3px 10px; vertical-align: middle; border-bottom: 1px solid #ccc;}
+.write_table table tr:nth-child(5) td{height: 300px; vertical-align: top; padding: 10px;}
+.write_table table tr td input[type="text"]{width: 100%; padding: 5px; border: none;}
+.write_table table tr td textarea{resize: none; width: 100%; min-height: 300px;border: none;}
+.btn_submit{background: -webkit-linear-gradient(top, rgba(63,76,107,1) 0%,rgba(63,76,107,1) 100%); /* Chrome10-25,Safari5.1-6 */
+background: linear-gradient(to bottom, rgba(63,76,107,1) 0%,rgba(63,76,107,1) 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */ width: 200px; height: 40px; color: #fff; border: 1px solid #606a73;}
+.btn_back{background: -webkit-linear-gradient(top, rgba(238,238,238,1) 0%,rgba(238,238,238,1) 100%); /* Chrome10-25,Safari5.1-6 */
+background: linear-gradient(to bottom, rgba(238,238,238,1) 0%,rgba(238,238,238,1) 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */width: 200px; height: 40px; color: #666; border: 1px solid #aaa;}
+
+.login_box{width: 300px; margin: 50px auto;}
+.login_box .input {width: 100%; margin-bottom: 5px; padding: 5px; border: 1px solid #ccc;height: 40px}
+.login_box button{width: 100%;}
+.join{width: 300px;margin-top: 10px;}
+.join ul{text-align: center;}
+.join ul li{display: inline-block; padding: 0 10px;}
+
+
+.join_table{width: 100%;}
+.join_table table{width: 100%; border-collapse: collapse; border-top: 1px solid #aaa;}
+.join_table table tr th{height: 50px; width: 20%; background-color: #f9f9f9; border-bottom: 1px solid #aaa; border-left: 2px solid #606a73;}
+.join_table table tr td{padding: 0 2%; border-left: 1px solid #aaa; border-bottom: 1px solid #aaa;}
+.join_table table tr td span.small{margin-left: 20px; font-size: 12px; color: #666;}
+.join_table table tr td input{padding: 5px; border: 1px solid #ddd; width: 200px}
+.join_table table tr td select{width: 200px; height: 35px;border: 1px solid #ddd;}
+.join_table table tr:first-child td button{margin-left: 5px; height: 30px; border: 1px solid #606a73; background: #fff; color: #606a73;}
+.join_table table tr td input.call{width: 100px;}
+.join_table table tr td input[type="radio"], .join_table table tr td input[type="checkbox"]{width: 20px; vertical-align: middle;}
+.join_table table tr td label{vertical-align: middle;}
+.join_table .join_btn{margin-top: 40px; text-align: center;}
+.join_table .join_btn button{margin-left: 10px;}
+
+.note{padding: 10px; border-radius: 5px; border: 1px solid #aaa; background-color: #faf7e1;}
+.find_box{width: 50%; padding: 20px; float: left;}
+.find_box h3{padding: 5px 0; border-bottom: 1px solid #ddd;}
+.find_box input.id{width: 100%; margin-bottom: 5px; margin-top: 10px; height: 40px; padding: 10px; border: 1px solid #ddd;}
+.find_box input.email{width: 250px; padding: 10px; height: 40px; border: 1px solid #ddd;}
+.find_box select{width: 176px; height: 40px; border: 1px solid #ddd;}
+.find_box button{width: 100%; margin-top: 10px;}

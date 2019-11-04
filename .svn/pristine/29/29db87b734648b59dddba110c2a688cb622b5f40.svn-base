@@ -1,0 +1,58 @@
+package com.cinema.web.movie.bean;
+
+public class MovieBean {
+	
+	private String titleKor;
+	private String titleEng;
+	private String hall;
+	private String opTime;
+	private String edTime;
+	private String path;
+	private String code;
+	
+	public String getTitleKor() {
+		return titleKor;
+	}
+	public void setTitleKor(String titleKor) {
+		this.titleKor = titleKor;
+	}
+	public String getTitleEng() {
+		return titleEng;
+	}
+	public void setTitleEng(String titleEng) {
+		this.titleEng = titleEng;
+	}
+	public String getHall() {
+		return hall;
+	}
+	public void setHall(String hall) {
+		this.hall = hall;
+	}
+	public String getOpTime() {
+		return opTime;
+	}
+	public void setOpTime(String opTime) {
+		this.opTime = opTime;
+	}
+	public String getEdTime() {
+		return edTime;
+	}
+	public void setEdTime(String edTime) {
+		this.edTime = edTime;
+	}
+	public String getPath() {
+		return path;
+	}
+	public void setPath(String path) {
+		this.path = path;
+	}
+	public String getCode() {
+		return code;
+	}
+	public void setCode(String code) {
+		this.code = code;
+	}
+	
+	
+	
+}

@@ -1,0 +1,73 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+	pageEncoding="UTF-8"%>
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<script type = "text/javascript" src="/js/common/jquery-3.2.1.js"></script>
+<title>Insert title here</title>
+
+<script>
+
+//비밀번호 중복 확인
+function checkPW(){
+	
+	var origPW = $("[name=password]")
+	var chkPW = $("[name=password2]")
+	
+	if(origPW.val() != chkPW.val()){
+		
+		alert("비밀번호가 일치하지 않습니다.");
+		origPW.val("");
+		chkPW.val("");
+		origPW.focus();
+	}	
+}
+
+function moveTo(){
+	location.replace("/index.do");
+}
+</script>
+</head>
+<body>
+	<table>
+
+		<form action="/member/insertJoinProc.do" method="POST">
+			<tr>
+				<td>ID :</td>
+				<td><input type="text" name="memberId"> 
+				<input type="button" value="중복확인"></td>
+			<tr>
+				<td>PW :</td>
+				<td><input type="text" name="password"> 
+				<input type="text" name="password2" placeholder="PW 재입력"></td>
+			<tr>
+				<td>이름 :</td>
+				<td><input type="text" name="name" onKeyup="checkPW()"></td>
+			<tr>
+				<td>이메일 :</td>
+				
+				<td><input type="text" name="email"> 
+				<select name="email2">
+						<option value="">-선택-
+						<option value="naver.com">naver.com
+						<option value="hanmail.co.kr">hanmail.co.kr
+						<option value="gmail.com">gmail.com
+						<option value="yahoo.co.kr">yahoo.co.kr
+						<option value="기타">직접입력
+				</select> 
+				<input type="button" value="중복"></td>
+				<!--  onclick="duplCheck()" 중복확인함수. 나중에 등록 -->
+			<tr>
+				<td>전화번호 :</td>
+				<td><input type="text" name="tel"></td>
+			</tr>
+			<tr align="center">
+				<td colspan="2"> <input type = "submit" value = "등록">&nbsp;
+								<input type = "button" value = "취소" onclick="moveTo()"></td>
+								
+	
+		</form>
+	</table>
+</body>
+</html>

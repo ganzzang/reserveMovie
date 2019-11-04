@@ -1,0 +1,141 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<script type="text/javascript" src="/js/common/jquery-3.2.1.js"></script>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Insert title here</title>
+<script type="text/javascript">
+/*
+$(function(){
+	
+	var abc = ['A','B','C'];
+	var chkHall = ${movieBean.hall};
+	
+	$("#hall").attr(<option value="chkHall">chkHall</option>);
+	
+	for(var i = 0; i < abc.length; i++){
+		if(abc[i] != chkHall){
+			$("#hall").attr(<option value="abc[i]">abc[i]</option>);
+		}
+	}
+}
+*/
+</script>
+</head>
+<body>
+	
+	<table>
+		<form type="get" action="/admin/updateMovieProc.do">
+			<tr>
+				<td>한글제목</td>
+				<td><input type="text" name="titleKor" value="${movieBean.titleKor}">
+				<input type="hidden" name="code" value="${movieBean.code}"></td>
+			</tr>
+			<tr>
+				<td>영어제목</td>
+				<td><input type="text" name="titleEng" value="${movieBean.titleEng}"></td>
+			</tr>
+			<tr>
+				<td>상영관</td>
+				<td><select name="hall">
+				<option value="A">A</option>
+				<option value="B">B</option>
+				<option value="C">C</option>
+				</select>
+				</td>
+			</tr>
+			<tr>
+				<td>시작시간</td>
+				<td>
+				<select name = "opTimeMonth">
+					<script type="text/javascript">
+					for(i=1;i<=12;i++){
+						if(i<10){i = "0"+i}
+						document.write('<option value="'+i+'">'+i);
+					}
+					</script>
+				</select>월
+				
+				<select name = "opTimeDay">
+					<script type="text/javascript">
+					for(i=1;i<=31;i++){
+						if(i<10){i = "0"+i}
+						document.write('<option value="'+i+'">'+i);
+					}
+				</script>
+				</select>일
+				
+				<select name = "opTimeHh">
+				<script type="text/javascript">
+					for(i=0;i<24;i++){
+						if(i<10){i = "0"+i}
+						document.write('<option value="'+i+'">'+i);
+					}
+				</script>
+				</select>시
+				<select name = "opTimeMi">
+				<script type="text/javascript">
+					for(i=0;i<60;i++){
+						if(i<10){i = "0"+i}
+						document.write('<option value="'+i+'">'+i);
+					}
+				</script>
+				</select>분
+				</td>
+			</tr>
+				<tr>
+				<td>종료시간</td>
+				<td>
+				<select name = "edTimeMonth">
+					<script type="text/javascript">
+					for(i=1;i<=12;i++){
+						if(i<10){i = "0"+i}
+						document.write('<option value="'+i+'">'+i);
+					}
+				</script>
+				</select>월
+				
+				<select name = "edTimeDay">
+					<script type="text/javascript">
+					for(i=1;i<=31;i++){
+						if(i<10){i = "0"+i}
+						document.write('<option value="'+i+'">'+i);
+					}
+				</script>
+				</select>일
+				
+				<select name = "edTimeHh">
+				<script type="text/javascript">
+					for(i=0;i<24;i++){
+						if(i<10){i = "0"+i}
+						document.write('<option value="'+i+'">'+i);
+					}
+				</script>
+				</select>시
+				
+				<select name = "edTimeMi">
+				<script type="text/javascript">
+					for(i=0;i<60;i++){
+						if(i<10){i = "0"+i}
+						document.write('<option value="'+i+'">'+i);
+					}
+				</script>
+				</select>분
+				
+				</td>
+			</tr>
+			<tr>
+				<td>이미지</td>
+				<td><input type="file"></td>
+			</tr>
+			<tr>
+				<td colspan="2"><input type="submit" value="수정완료">
+				<input type="button" value="취소" onclick="back();"></td>
+			</tr>
+			
+		</form>
+	</table>
+</body>
+</html>
